@@ -1,0 +1,60 @@
+modules:
+  jira:projectPage:
+    - key: sprint-analysis-page
+      resource: main
+      resolver:
+        function: resolver
+      title: Sprint Analysis
+
+  jira:issuePanel:
+    - key: sprint-metrics-panel
+      resource: main
+      resolver:
+        function: resolver
+      title: Sprint Metrics
+      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
+
+  function:
+    - key: resolver
+      handler: backend/index.handler
+
+    - key: scheduled-analysis
+      handler: backend/index.scheduledAnalysis
+
+  trigger:
+    - key: daily-sprint-analysis
+      function: scheduled-analysis
+      events:
+        - avi:forge:scheduled:daily
+
+resources:
+  - key: main
+    path: static/hello-world/build
+
+app:
+  id: ari:cloud:ecosystem::app/e8eb62e0-7356-4d89-8e08-fc50b03ad7b3
+  runtime:
+    name: nodejs20.x
+
+permissions:
+  scopes:
+    - read:jira-work
+    - read:sprint:jira-software
+    - read:issue:jira-software
+    - read:project:jira
+    - read:issue-details:jira
+    - read:board-scope:jira-software
+    - read:issue:jira
+    - read:jira-user
+    - read:field:jira
+    - read:avatar:jira
+    - read:issue.changelog:jira
+    - read:project.property:jira
+    - storage:app
+  external:
+    fetch:
+      client:
+        - '*.atlassian.net'
+  content:
+    styles:
+      - unsafe-inline
